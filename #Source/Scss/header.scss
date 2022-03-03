@@ -78,6 +78,13 @@
 			margin-left: -21.5px;
 		}
 	}
+
+	@media (max-width: $md2 + px){
+		margin-right: 15px;
+		&:last-child{
+			margin-right: 0;
+		}
+	};
 }
 
 .header-body__icon{

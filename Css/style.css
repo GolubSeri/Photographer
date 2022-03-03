@@ -9401,6 +9401,14 @@ h1, h2, h3, h4, h5, h6 {
   bottom: -8px;
   margin-left: -21.5px;
 }
+@media (max-width: 992.98px) {
+  .header-body-list__item {
+    margin-right: 15px;
+  }
+  .header-body-list__item:last-child {
+    margin-right: 0;
+  }
+}
 
 .header-body__icon {
   display: none;
@@ -10508,7 +10516,6 @@ h1, h2, h3, h4, h5, h6 {
   height: 100%;
   -webkit-transition: all 1s ease 0s;
   transition: all 1s ease 0s;
-  transition: all 1s ease 0s;
   opacity: 0;
   -webkit-transform: translate(0, 70%);
           transform: translate(0, 70%);
@@ -10526,16 +10533,16 @@ h1, h2, h3, h4, h5, h6 {
   -webkit-transition: all 1s ease 0s;
   transition: all 1s ease 0s;
 }
+.portfolio-photos .photos-item__thumb.animActive {
+  opacity: 1;
+  -webkit-transform: translate(0, 0);
+          transform: translate(0, 0);
+}
 .portfolio-photos .photos-item__thumb:hover {
   -webkit-box-shadow: rgba(0, 0, 0, 0.35) 0px 10px 15px;
           box-shadow: rgba(0, 0, 0, 0.35) 0px 10px 15px;
   -webkit-transform: scale(1.05);
           transform: scale(1.05);
-}
-.portfolio-photos .photos-item__thumb.animActive {
-  opacity: 1;
-  -webkit-transform: translate(0, 0);
-          transform: translate(0, 0);
 }
 @media (max-width: 767.98px) {
   .portfolio-photos {
