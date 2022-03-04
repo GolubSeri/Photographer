@@ -7,36 +7,45 @@ function ibg(){
 }
 ibg();
 
-// function amh(){
-// 	$(".amh").each(function () {
-// 	  	var mh = 0, block_class = this.classList.item(0), lim = this.classList.item(2);
-// 	  	if ($(window).width() >= Number(lim))
-// 	  	{
-// 			$("." + block_class).each(function () {
-// 				$("." + block_class).css('min-height', 'auto');
-// 				var h_block = $(this).height();
-// 				console.log(block_class);
-// 				console.log(h_block);
-// 			  	if(h_block > mh) {
-// 			     	mh = h_block;
-// 			    };
-// 			});
-// 			$("." + block_class).css('min-height', mh + 'px');
-// 	  	} else {
-// 	  		$("." + block_class).each(function () {
-// 				$("." + block_class).css('min-height', 'auto');
-// 			});
-// 	  	}
-// 	});
-// }
+const adaptItems = document.querySelectorAll('.amh');
+let newAdaptItems = [];
 
-function amh(){
-	const adaptItems = document.querySelectorAll('.amh');
-}
-amh();
-// jQuery(window).resize(function() { 
-// 	amh();
-//  });
+// Удаляю дубликаты
+adaptItems.forEach(adaptItem => {
+	if(!newAdaptItems.includes(adaptItem.classList[0])){
+		newAdaptItems.push(adaptItem.classList[0]);
+	}
+});
+
+function amh(newAdaptItems){
+	let maxHeight = 0;
+	newAdaptItems.forEach(newAdaptItem => {
+		let items = document.querySelectorAll('.' + newAdaptItem);
+
+		console.log(items[0].classList[2]);
+		if( Number(items[0].classList[2]) < window.innerWidth){
+			items.forEach(item => {
+				item.style.minHeight = 'auto';
+				if (item.offsetHeight > maxHeight){
+					maxHeight = item.offsetHeight;
+				}
+			});
+
+			items.forEach(item => {
+				item.style.minHeight = maxHeight + 'px';
+			});
+		} else {
+			items.forEach(item => {
+				item.style.minHeight = 'auto';
+			});
+		}
+
+	});
+};
+
+jQuery(window).resize(function() { 
+	amh(newAdaptItems);
+ });
 
 // Бургер
 const iconMenu = document.querySelector('.header-body__icon');
