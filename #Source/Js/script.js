@@ -70,6 +70,9 @@ if (hoverAnimItems.length > 0){
 	}
 }
 
+let headerPadDown = 30;
+let headerPadUp = 15;
+
 // Прокрутка при клике 
 const menuLinks = document.querySelectorAll('.header-body-list__item[data-goto], .homeIcon[data-goto]');
 if (menuLinks.length > 0){
@@ -81,7 +84,7 @@ if (menuLinks.length > 0){
 		const menuLink = e.target;
 		if(menuLink.dataset.goto && document.querySelector(menuLink.dataset.goto)){
 			const gotoBlock = document.querySelector(menuLink.dataset.goto);
-			const gotoBlockValue = gotoBlock.getBoundingClientRect().top + pageYOffset - document.querySelector('.header-body').offsetHeight;
+			const gotoBlockValue = gotoBlock.getBoundingClientRect().top + pageYOffset + ( headerPadDown * 2 ) - document.querySelector('.header-body').offsetHeight;
 
 			window.scrollTo({
 				top: gotoBlockValue,
@@ -152,12 +155,15 @@ if (animItems.length > 0){
 		let headerHeight = header.offsetHeight;
 		if (pageYOffset > scrollPos && pageYOffset > 90){
 			// Down
-			document.querySelector('.header-body').style.height = 60 + 'px';
+			document.querySelector('.header-body').style.paddingTop = headerPadUp + 'px';
+			document.querySelector('.header-body').style.paddingBottom = headerPadUp + 'px';
 			document.querySelector('.header-container').classList.add('styleActive');
 		} else {
 			// Up
 			if (pageYOffset < 90){
-				document.querySelector('.header-body').style.height = 95 + 'px';
+				console.log()
+				document.querySelector('.header-body').style.paddingTop = headerPadDown + 'px';
+				document.querySelector('.header-body').style.paddingBottom = headerPadDown + 'px';
 				document.querySelector('.header-container').classList.remove('styleActive');
 			}
 		}
