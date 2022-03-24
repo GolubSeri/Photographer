@@ -1,9 +1,16 @@
 function ibg(){
-	$.each($('.ibg'), function(index, val) {
-		if($(this).find('img').length>0){
-			$(this).css('background-image','url("'+$(this).find('img').attr('src')+'")');
-		}
-	});
+	// $.each($('.ibg'), function(index, val) {
+	// 	if($(this).find('img').length>0){
+	// 		$(this).css('background-image','url("'+$(this).find('img').attr('src')+'")');
+	// 	}
+	// });
+	var ibgItems = document.querySelectorAll('.ibg');
+	if (ibgItems.length > 0){
+		ibgItems.forEach(ibgItem => {
+			let imgItem = ibgItem.querySelector('img').getAttribute('src');
+			ibgItem.style.backgroundImage = 'url("' + imgItem + '")';
+		});
+	}
 }
 ibg();
 
@@ -22,7 +29,6 @@ function amh(newAdaptItems){
 	newAdaptItems.forEach(newAdaptItem => {
 		let items = document.querySelectorAll('.' + newAdaptItem);
 
-		console.log(items[0].classList[2]);
 		if( Number(items[0].classList[2]) < window.innerWidth){
 			items.forEach(item => {
 				item.style.minHeight = 'auto';
@@ -43,9 +49,16 @@ function amh(newAdaptItems){
 	});
 };
 
-jQuery(window).resize(function() { 
-	amh(newAdaptItems);
- });
+document.addEventListener("DOMContentLoaded", function(event)
+{
+    window.onresize = function() {
+        amh(newAdaptItems);
+    };
+});
+
+// jQuery(window).resize(function() { 
+// 	amh(newAdaptItems);
+//  });
 
 // Бургер
 const iconMenu = document.querySelector('.header-body__icon');
@@ -83,23 +96,39 @@ let headerPadDown = 30;
 let headerPadUp = 15;
 
 // Прокрутка при клике 
-const menuLinks = document.querySelectorAll('.header-body-list__item[data-goto], .homeIcon[data-goto]');
+// const menuLinks = Array.prototype.slice.call(document.querySelector('.header-body-menu-list').querySelectorAll('a'));
+const menuLinks = Array.prototype.slice.call(document.querySelectorAll('.header-body-menu-list, .scrollLink'));
+
+let allLinks = [];
+menuLinks.forEach(menuLink => {
+	menuLink.querySelectorAll('a').forEach(linksItem=> {
+		allLinks.push(linksItem);
+	});
+});
+
 if (menuLinks.length > 0){
 	menuLinks.forEach(menuLink => {
 		menuLink.addEventListener("click", onMenuLinkClick);
 	});
 
 	function onMenuLinkClick(e) {
-		const menuLink = e.target;
-		if(menuLink.dataset.goto && document.querySelector(menuLink.dataset.goto)){
-			const gotoBlock = document.querySelector(menuLink.dataset.goto);
+		let menuLink = e.target;
+		if (!menuLink.getAttribute('href')){
+			menuLink = menuLink.parentNode;
+		}
+		e.preventDefault();
+
+		let gotoName = menuLink.getAttribute('href').replace('#', '.')
+		if(gotoName && document.querySelector(gotoName)){
+		// if(menuLink.dataset.goto && document.querySelector(menuLink.dataset.goto)){
+			const gotoBlock = document.querySelector(menuLink.getAttribute('href').replace('#', '.'));
 			const gotoBlockValue = gotoBlock.getBoundingClientRect().top + pageYOffset + ( headerPadDown * 2 ) - document.querySelector('.header-body').offsetHeight;
 
 			window.scrollTo({
 				top: gotoBlockValue,
 				behavior: "smooth"
 			});
-			e.preventDefault();
+			
 
 			// Закрываем меню при переходе на блок
 			if(iconMenu.classList.contains('_active')){
@@ -109,16 +138,6 @@ if (menuLinks.length > 0){
 			}
 		}
 	}
-}
-const logoLink = document.querySelector('.header-body__logo');
-if(logoLink){
-	logoLink.addEventListener('click', function(e){
-		window.scrollTo({
-			top: 0,
-			behavior: "smooth"
-		});
-		e.preventDefault();
-	});
 }
 
 // Анимация при скролле
@@ -149,7 +168,7 @@ if (animItems.length > 0){
 					setTimeout(() => {
 						animItem.classList.remove('disableHover');
 						animItem.classList.add('activeHover');
-					}, 1500);
+					}, 900);
 				}
 
 				if (animItem.classList.contains('hoverAnim')){
@@ -170,7 +189,6 @@ if (animItems.length > 0){
 		} else {
 			// Up
 			if (pageYOffset < 90){
-				console.log()
 				document.querySelector('.header-body').style.paddingTop = headerPadDown + 'px';
 				document.querySelector('.header-body').style.paddingBottom = headerPadDown + 'px';
 				document.querySelector('.header-container').classList.remove('styleActive');
@@ -282,4 +300,84 @@ function bodyUnlock() {
 	setTimeout(function(){
 		unlock = true;
 	}, timeout);
+}
+
+document.addEventListener('DOMContentLoaded', function(){
+	const form = document.getElementById('form');
+	form.addEventListener('submit', formSend);
+
+	async function formSend(e){
+		e.preventDefault();
+
+		let error = formValidate(form);
+
+		let formData = new FormData(form);
+
+		if(error === 0){
+			form.classList.add('_sending');
+			/*
+			let response = await fetch('sendmail.php', {
+				method: 'POST',
+				body: formData
+			});
+			if(response.ok){
+				let result = await response.json();
+				alert(result.message);
+				form.reset();
+				form.classList.remove('_sending');
+			} else {
+				alert('Ошибка');
+				form.classList.add('_sending');
+			}
+			*/
+		} else {
+			alert('Заполните поля!');
+		}
+	}
+
+	function formValidate(form){
+		let error = 0;
+		let formReq = document.querySelectorAll('.req');
+
+		for (let index = 0; index < formReq.length; index++) {
+			const input = formReq[index];		
+			formRemoveError(input);
+
+			if (input.classList.contains('email')){
+				if(emailTest(input)){
+					formAddError(input)
+					error++;
+				}
+			} else {
+				if (input.value === input.dataset.value){
+					formAddError(input);
+					error++;
+				}
+			}
+		}
+
+		return error;
+	}
+
+	function formAddError(input) {
+		// input.parentElement.classList.add('_error');
+		input.classList.add('_error');
+	}
+	function formRemoveError(input) {
+		// input.parentElement.classList.remove('_error');
+		input.classList.remove('_error');
+	}
+
+	function emailTest(input) {
+		return !/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,8})+$/.test(input.value);
+	}
+});
+
+// Ширина скилла
+let lines = document.querySelectorAll('.skill__line');
+let linesWidth = document.querySelectorAll('.skill__text');
+
+for (var i = 0; i < lines.length; i++) {
+	let lineWidth = linesWidth[i].querySelector('p').outerText;
+	lines[i].style.setProperty('--lineWidth', lineWidth);
 }

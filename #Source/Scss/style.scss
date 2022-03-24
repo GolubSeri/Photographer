@@ -231,8 +231,6 @@ body.lock{
 	margin-right: -50%;
 	transform: translate(-50%, -50%);
 
-	cursor: pointer;
-
 	@media (max-width: $md2 + px){
 		display: none;
 	};
@@ -439,6 +437,7 @@ body.lock{
 }
 .skill__line{
 	border: 1px solid #f3f3f3;
+	--lineWidth: 100%;
 
 	position: relative;
 	&::before{
@@ -446,16 +445,8 @@ body.lock{
 		position: absolute;
 		height: 2px;
 		background-color: #000;
-	}
 
-	&.first::before{
-		width: 100%;
-	}
-	&.second::before{
-		width: 65%;
-	}
-	&.third::before{
-		width: 80%;
+		width: var(--lineWidth);
 	}
 
 	&::after{
@@ -791,6 +782,12 @@ body.lock{
 		grid-row: 4/8;
 	}
 
+	.item_02{
+		.photos-item__thumb{
+			transform: translate(0, 50%);
+		}
+	}
+
 	.photos-item__thumb {
 		position: relative;
 		overflow: hidden;
@@ -817,7 +814,7 @@ body.lock{
 			transform: translate(0, 0);
 		}
 		
-		&:hover{
+		&.activeHover:hover{
 			box-shadow: rgba(0, 0, 0, 0.35) 0px 10px 15px;
 			transform: scale(1.05);
 		}
@@ -925,7 +922,7 @@ body.lock{
 
 .testimonials {
 	@include adaptiv-value('padding-top', 130, 75, 320, 600);
-	@include adaptiv-value('padding-bottom', 130, 45, 320, 600);
+	@include adaptiv-value('padding-bottom', 90, 45, 320, 600);
 }
 .testimonials__title {
 	text-align: center;
@@ -964,17 +961,14 @@ body.lock{
 }
 .testimonials-columns {
 	@include flexbox();
-
-	@media (max-width: $md3 + px){
-		flex-wrap: wrap;
-	};
+	flex-wrap: wrap;
 }
 .testimonials-columns__item {
 	flex: 0 0 50%;
+	margin-bottom: 40px;
 
 	@media (max-width: $md3 + px){
 		flex: 0 0 100%;
-		margin-bottom: 40px;
 
 		@include flexbox();
 		flex-direction: column;
@@ -1011,6 +1005,14 @@ body.lock{
 }
 .testimonials-item-header__image {
 	margin-right: 20px;
+	max-width: 80px;
+	max-height: 80px;
+	img{
+		width: 100%;
+		height: 100%;
+		border-radius: 100%;
+		object-fit: cover;
+	}
 }
 .testimonials-item-header-info {
 	@include flexbox();
@@ -1233,6 +1235,25 @@ body.lock{
 
 	justify-content: center;
 	align-items: center;
+
+	position: relative;
+	&::after{
+		content: '';
+		position: absolute;
+		top: 0;
+		left: 0;
+
+		width: 100%;
+		height: 100%;
+		background: rgba(51, 51, 51, 0.7) url('../Img/Contacts/Loading.gif') center / 50px no-repeat;
+		opacity: 0;
+		visibility: hidden;
+		transition: all 0.5s ease 0s;
+	}
+	&._sending::after{
+		opacity: 1;
+		visibility: visible;
+	}
 }
 .contacts-form__name {
 	font-size: 14px;
@@ -1242,6 +1263,10 @@ body.lock{
 	text-align: center;
 	width: 100%;
 	height: 50px;
+
+	&._error{
+		box-shadow: 0 0 15px red;
+	}
 }
 .contacts-form__beforeName {
 	width: 100%;
@@ -1277,6 +1302,10 @@ body.lock{
 	text-align: center;
 	width: 100%;
 	height: 50px;
+
+	&._error{
+		box-shadow: 0 0 15px red;
+	}
 }
 .contacts-form__beforeEmail {
 	width: 100%;
@@ -1314,6 +1343,10 @@ body.lock{
 	max-width: 750px;
 	max-height: 150px;
 	min-height: 60px;
+
+	&._error{
+		box-shadow: 0 0 15px red;
+	}
 }
 .contacts-form__beforeMessage {
 	width: 100%;
